@@ -1,0 +1,1 @@
+g++ catch_amalgamated.cpp list.cpp task.cpp -o test

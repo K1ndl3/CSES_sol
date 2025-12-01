@@ -1,0 +1,1 @@
+g++ main.cpp list.cpp task.cpp -o output
