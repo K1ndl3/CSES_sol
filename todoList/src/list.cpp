@@ -29,7 +29,7 @@ std::string& List::trimLeftWS(std::string &strToTrim)
     if (!isspace(strToTrim[0])) return strToTrim; // the check for if string is empty is already apart of another function
     std::string::iterator sIt = strToTrim.begin();
     while(isspace(*sIt)) ++sIt;
-    strToTrim.erase(sIt, strToTrim.end());
+    strToTrim.erase(strToTrim.begin(),sIt);
     return strToTrim;
 }
 
