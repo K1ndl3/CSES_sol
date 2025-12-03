@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <memory>
 
 
 class Task{
@@ -10,8 +11,11 @@ private:
     
 public:    
     Task(std::string title, std::string details, int priority) : _title(std::move(title)), _details(std::move(details)), _priority(priority) {}
-
-    void createTask(std::string newTaskTitle, std::string newTaskDetails, int newTaskPriority);
+    // getters and setters
+    void setTitle(std::string newTitle);
+    void setDetails(std::string newDetals);
+    void setPriority(int priority);
+    static std::unique_ptr<Task> createTask(std::string newTaskTitle, std::string newTaskDetails, int newTaskPriority);
     bool editTask(std::string newTaskTitle, std::string newTaskDetails, int newTaskPriority);
 
 };
