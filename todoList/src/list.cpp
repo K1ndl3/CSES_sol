@@ -34,11 +34,26 @@ bool List::addTask(Task &task)
 
 bool List::editTask(std::string title, std::string details, int priority, std::size_t index)
 {
-    // use the index to grab the task
-    Task currTask = *List::getTask(index);
-    // validate and trim all inputs 
+    Task* currTask = List::getTask(index);
+    if (!currTask) return false;
+    if (title.empty()) {
+        std::cout << "ERROR: cannot leave title empty (CODE: LIST)\n";
+        return false;
+    }
+    
+    if (details.empty()) {
+        std::cout << "ERROR: cannot leave details empty (CODE: LIST)\n";
+        return false;
+    }
+
+    if (priority < 1 || priority > 5) {
+        std::cout << "ERROR: invalid priority rating (CODE: LIST)\n";
+        return false;
+    }
+    trimEntireString(title);
+    trimEntireString(details);
     // use setters of the task class to change the title details or index
-    return false;
+    return currTask->Task::editTask(title, details, priority);
 }
 
 std::string& List::trimLeftWS(std::string &strToTrim)

@@ -16,7 +16,6 @@ public:
     static std::string& trimRightWS(std::string& strToTrim); // pass test
     static std::string& trimEntireString(std::string& s); // pass test
     Task* getTask(std::size_t index); // pass test
-    static Task* getTask(std::size_t index);
     inline const int getSize() { return _list.size(); } // no need for test
     // add task to list
     bool addTask(std::string taskTitle, std::string taskDetails, int priority); // pass test
