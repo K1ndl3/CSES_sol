@@ -60,3 +60,35 @@ TEST_CASE("List::addTask, check for same object") {
     list.addTask(testTask);
     addrTestTask == list.getTask(0);
 }
+
+TEST_CASE("List::validateInput") {
+    std::string emptyString = "";
+    std::string nonEmptyString = "test";
+    int validRating = 5;
+    int invalidRating = 6;
+    REQUIRE(List::validateInput(emptyString, nonEmptyString, validRating) == false);
+    REQUIRE(List::validateInput(nonEmptyString, emptyString, validRating) == false);
+    REQUIRE(List::validateInput(nonEmptyString, nonEmptyString, invalidRating) == false);
+    REQUIRE(List::validateInput(nonEmptyString, nonEmptyString, validRating) == true);
+}
+
+TEST_CASE("List::editTask") {
+    Task task("test", "test", 1);
+    std::string newString = "newtest";
+    int newInt = 5;
+    List list;
+    list.List::addTask(task);
+    list.List::editTask(newString, newString, newInt, 0);
+    REQUIRE(list.List::getTask(0)->getTitle() == newString);
+    REQUIRE(list.List::getTask(0)->getDetails() == newString);
+    REQUIRE(list.List::getTask(0)->getPriority() == newInt);
+}
+
+TEST_CASE("List::deleteTask") {
+    List list;
+    Task task("test", "test", 1);
+    list.addTask(task);
+    list.deleteTask(0);
+    REQUIRE(list.List::getSize() == 0);
+    REQUIRE(list.deleteTask(1) == false);
+}

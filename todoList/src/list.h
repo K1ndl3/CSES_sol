@@ -12,20 +12,26 @@ public:
     List() = default;
     ~List() = default;
     //helper functions
-    static std::string& trimLeftWS(std::string& strToTrim); // pass test
-    static std::string& trimRightWS(std::string& strToTrim); // pass test
-    static std::string& trimEntireString(std::string& s); // pass test
-    Task* getTask(std::size_t index); // pass test
-    inline const int getSize() { return _list.size(); } // no need for test
+    static std::string& trimLeftWS(std::string& strToTrim);                            // pass test
+    static std::string& trimRightWS(std::string& strToTrim);                           // pass test
+    static std::string& trimEntireString(std::string& s);                              // pass test
+    static bool validateInput(std::string& title, std::string& details, int priority); // pass test
+    Task* getTask(std::size_t index);                                                  // pass test
+    inline const int getSize() { return _list.size(); }                                // no need for test
+
     // add task to list
-    bool addTask(std::string taskTitle, std::string taskDetails, int priority); // pass test
-    bool addTask(Task& task); // pass test
+    bool addTask(std::string taskTitle, std::string taskDetails, int priority);        // pass test
+    bool addTask(Task& task);                                                          // pass test
+    
     // edit a certain task
-    bool editTask(std::string title, std::string details, int priority, std::size_t index);
-    // delete as task
+    bool editTask(std::string title, std::string details, int priority, std::size_t index); // pass test
+    
+    // delete a task
+    bool deleteTask(std::size_t index);
 
     // change order of the list
-        // move task up, down, toTop, toBottom, rearrage entire list
+        // move task up
+        //, down, toTop, toBottom, rearrage entire list
 private:
     std::vector<std::unique_ptr<Task>> _list;
 };

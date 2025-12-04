@@ -19,6 +19,11 @@ public:
     void setDetails(std::string&& newDetails);
     void setPriority(int priority);
 
+    //getters
+    inline const std::string& getTitle() const { return _title; }
+    inline const std::string& getDetails() const { return _details; }
+    inline int getPriority() const { return _priority; }
+
     //create and edit
     static std::unique_ptr<Task> createTask(std::string newTaskTitle, std::string newTaskDetails, int newTaskPriority);
     static std::unique_ptr<Task> createTask(std::string&& newTaskTitle, std::string&& newTaskDetails, int newTaskPriority);
