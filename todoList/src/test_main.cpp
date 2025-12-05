@@ -3,6 +3,19 @@
 #include "task.h"
 #include "list.h"
 
+class testClass : public List{
+public:
+    testClass() {
+        addTask("Task 1", "Details 1", 1);
+        addTask("Task 2", "Details 2", 2);
+        addTask("Task 3", "Details 3", 3);
+        addTask("Task 4", "Details 4", 4);
+    }
+
+    static bool validateIndex(std::size_t index, std::size_t size) { 
+        return List::validateIndex(index, size);
+    }    
+};
 
 TEST_CASE("List::trimLeftWS") {
     std::string t1 = "    hello";
@@ -94,12 +107,6 @@ TEST_CASE("List::deleteTask") {
     REQUIRE(list.deleteTask(1) == false);
 }
 
-class testClass{
-public:
-    static bool validateIndex(std::size_t index, std::size_t size) { 
-        return List::validateIndex(index, size);
-    }    
-};
 TEST_CASE("List::validateIndex") {
     List list;
     Task task("test", "test", 1);
@@ -116,4 +123,152 @@ TEST_CASE("List::validateIndex") {
     REQUIRE(testClass::validateIndex(-1, size) == false);
     REQUIRE(testClass::validateIndex(3, size) == true);
 
+}
+
+TEST_CASE("List::moveTaskUp") {
+    testClass test;
+    REQUIRE(test.testClass::moveTaskUp(0) == false);
+    REQUIRE(test.testClass::moveTaskUp(1) == true);
+    REQUIRE(test.testClass::moveTaskUp(7) == false);
+    REQUIRE(test.testClass::moveTaskUp(-1) == false);
+}
+
+TEST_CASE("list::moveTaskUp") {
+    testClass test;
+    test.moveTaskUp(1);
+    REQUIRE(test.getTask(0)->getTitle() == "Task 2");
+}
+
+TEST_CASE("List::moveTaskUp - edge cases and invalid inputs") {
+    testClass test;
+
+    SECTION("Move task at the top of the list (index 0)") {
+        REQUIRE(test.moveTaskUp(0) == false);  // Cannot move the first task up
+        REQUIRE(test.getTask(0)->getTitle() == "Task 1");  // Ensure the list remains unchanged
+    }
+
+    SECTION("Move task in the middle of the list") {
+        REQUIRE(test.moveTaskUp(2) == true);  // Move "Task 3" up
+        REQUIRE(test.getTask(1)->getTitle() == "Task 3");  // "Task 3" should now be at index 1
+        REQUIRE(test.getTask(2)->getTitle() == "Task 2");  // "Task 2" should now be at index 2
+    }
+
+    SECTION("Move task at the bottom of the list") {
+        REQUIRE(test.moveTaskUp(3) == true);  // Move "Task 4" up
+        REQUIRE(test.getTask(2)->getTitle() == "Task 4");  // "Task 4" should now be at index 2
+        REQUIRE(test.getTask(3)->getTitle() == "Task 3");  // "Task 3" should now be at index 3
+    }
+
+    SECTION("Invalid index (out of bounds)") {
+        REQUIRE(test.moveTaskUp(7) == false);  // Index out of bounds
+        REQUIRE(test.moveTaskUp(-1) == false);  // Negative index (invalid)
+    }
+
+    SECTION("Move multiple tasks up sequentially") {
+        REQUIRE(test.moveTaskUp(3) == true);  // Move "Task 4" up
+        REQUIRE(test.moveTaskUp(2) == true);  // Move "Task 4" up again
+        REQUIRE(test.getTask(1)->getTitle() == "Task 4");  // "Task 4" should now be at index 1
+        REQUIRE(test.getTask(2)->getTitle() == "Task 2");  // "Task 3" should now be at index 2
+        REQUIRE(test.getTask(3)->getTitle() == "Task 3");  // "Task 2" should now be at index 3
+    }
+
+    SECTION("Move task up in a single-item list") {
+        testClass singleTaskList;
+        singleTaskList.deleteTask(1);  // Remove all tasks except the first one
+        singleTaskList.deleteTask(1);
+        singleTaskList.deleteTask(1);
+        REQUIRE(singleTaskList.getSize() == 1);  // Ensure only one task remains
+        REQUIRE(singleTaskList.moveTaskUp(0) == false);  // Cannot move the only task up
+    }
+}
+
+TEST_CASE("List::moveTaskDown - edge cases and invalid inputs") {
+    testClass test;
+
+    SECTION("Move task at the bottom of the list (last index)") {
+        REQUIRE(test.moveTaskDown(3) == false);  // Cannot move the last task down
+        REQUIRE(test.getTask(3)->getTitle() == "Task 4");  // Ensure the list remains unchanged
+    }
+
+    SECTION("Move task in the middle of the list") {
+        REQUIRE(test.moveTaskDown(1) == true);  // Move "Task 2" down
+        REQUIRE(test.getTask(1)->getTitle() == "Task 3");  // "Task 3" should now be at index 1
+        REQUIRE(test.getTask(2)->getTitle() == "Task 2");  // "Task 2" should now be at index 2
+    }
+
+    SECTION("Move task at the top of the list") {
+        REQUIRE(test.moveTaskDown(0) == true);  // Move "Task 1" down
+        REQUIRE(test.getTask(0)->getTitle() == "Task 2");  // "Task 2" should now be at index 0
+        REQUIRE(test.getTask(1)->getTitle() == "Task 1");  // "Task 1" should now be at index 1
+    }
+
+    SECTION("Invalid index (out of bounds)") {
+        REQUIRE(test.moveTaskDown(7) == false);  // Index out of bounds
+        REQUIRE(test.moveTaskDown(-1) == false);  // Negative index (invalid)
+    }
+
+    SECTION("Move multiple tasks down sequentially") {
+        REQUIRE(test.moveTaskDown(0) == true);  // Move "Task 1" down
+        REQUIRE(test.moveTaskDown(1) == true);  // Move "Task 1" down again
+        REQUIRE(test.getTask(2)->getTitle() == "Task 1");  // "Task 1" should now be at index 2
+        REQUIRE(test.getTask(1)->getTitle() == "Task 3");  // "Task 3" should now be at index 1
+        REQUIRE(test.getTask(0)->getTitle() == "Task 2");  // "Task 2" should now be at index 0
+    }
+
+    SECTION("Move task down in a single-item list") {
+        testClass singleTaskList;
+        singleTaskList.deleteTask(1);  // Remove all tasks except the first one
+        singleTaskList.deleteTask(1);
+        singleTaskList.deleteTask(1);
+        REQUIRE(singleTaskList.getSize() == 1);  // Ensure only one task remains
+        REQUIRE(singleTaskList.moveTaskDown(0) == false);  // Cannot move the only task down
+    }
+}
+
+TEST_CASE("List::moveToTop - edge cases and invalid inputs") {
+    testClass test;
+
+    SECTION("Move task already at the top (index 0)") {
+        REQUIRE(test.moveToTop(0) == false);  // Moving the first task to the top should fail
+        REQUIRE(test.getTask(0)->getTitle() == "Task 1");  // Ensure the list remains unchanged
+    }
+
+    SECTION("Move task from the middle of the list to the top") {
+        REQUIRE(test.moveToTop(2) == true);  // Move "Task 3" to the top
+        REQUIRE(test.getTask(0)->getTitle() == "Task 3");  // "Task 3" should now be at index 0
+        REQUIRE(test.getTask(1)->getTitle() == "Task 1");  // "Task 1" should now be at index 1
+        REQUIRE(test.getTask(2)->getTitle() == "Task 2");  // "Task 2" should now be at index 2
+    }
+
+    SECTION("Move task from the bottom of the list to the top") {
+        REQUIRE(test.moveToTop(3) == true);  // Move "Task 4" to the top
+        REQUIRE(test.getTask(0)->getTitle() == "Task 4");  // "Task 4" should now be at index 0
+        REQUIRE(test.getTask(1)->getTitle() == "Task 1");  // "Task 1" should now be at index 1
+        REQUIRE(test.getTask(2)->getTitle() == "Task 2");  // "Task 2" should now be at index 2
+        REQUIRE(test.getTask(3)->getTitle() == "Task 3");  // "Task 3" should now be at index 3
+    }
+
+    SECTION("Invalid index (out of bounds)") {
+        REQUIRE(test.moveToTop(7) == false);  // Index out of bounds
+        REQUIRE(test.moveToTop(-1) == false);  // Negative index (invalid)
+    }
+
+    SECTION("Move multiple tasks to the top sequentially") {
+        REQUIRE(test.moveToTop(3) == true);  // Move "Task 4" to the top
+        REQUIRE(test.getTask(0)->getTitle() == "Task 4");  // "Task 4" should now be at index 0
+
+        REQUIRE(test.moveToTop(2) == true);  // Move "Task 3" to the top
+        REQUIRE(test.getTask(0)->getTitle() == "Task 3");  // "Task 3" should now be at index 0
+        REQUIRE(test.getTask(1)->getTitle() == "Task 4");  // "Task 4" should now be at index 1
+    }
+
+    SECTION("Move task to the top in a single-item list") {
+        testClass singleTaskList;
+        singleTaskList.deleteTask(1);  // Remove all tasks except the first one
+        singleTaskList.deleteTask(1);
+        singleTaskList.deleteTask(1);
+        REQUIRE(singleTaskList.getSize() == 1);  // Ensure only one task remains
+        REQUIRE(singleTaskList.moveToTop(0) == false);  // Moving the only task to the top should fail
+        REQUIRE(singleTaskList.getTask(0)->getTitle() == "Task 1");  // Ensure the task remains unchanged
+    }
 }

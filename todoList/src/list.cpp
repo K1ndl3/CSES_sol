@@ -42,13 +42,40 @@ bool List::deleteTask(std::size_t index)
 bool List::moveTaskUp(std::size_t index)
 {
 
-    if (index == 0 || !validateIndex(index, _list.size())) return false; // cannot move task up bc its at the top
+    if (index == 0 || !validateIndex(index, _list.size())) {
+        std::cout << "ERROR: cannot move task up (MOVE_TASK_UP)\n";
+        return false; // cannot move task up bc its at the top
+    }
     std::swap(_list.at(index), _list.at(index - 1));
+    return true;
+}
+
+bool List::moveTaskDown(std::size_t index)
+{
+    // validate input
+    std::size_t size = List::getSize();
+    if (index >= _list.size()-1 || !validateIndex(index, size)) {
+        std::cout << "ERROR: cannot move task down (MOVE_TASK_DOWN)\n";
+        return false;
+    }    
+    std::swap(_list.at(index), _list.at(index + 1));
+    return true;
+}
+
+bool List::moveToTop(std::size_t index)
+{
+    if (index == 0 || index >= getSize() || !validateIndex(index)) {
+        std::cout << "ERROR: cannot move task to top (MOVE_TASK_TOP)'n";
+        return false;
+    }
+    std::swap(_list.at(0), _list.at(index));
+    return true;
 }
 
 bool List::validateIndex(std::size_t index, std::size_t size)
 {
     if(index >= size || index < 0) {
+        std::cout << "ERROR: invalid index (VALIDATE_INDEX)\n";
         return false;
     }
     return true;

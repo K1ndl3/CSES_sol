@@ -18,7 +18,7 @@ public:
     static std::string& trimEntireString(std::string& s);                              // pass test
     static bool validateInput(std::string& title, std::string& details, int priority); // pass test
     Task* getTask(std::size_t index);                                                  // pass test
-    inline const int getSize() { return _list.size(); }                                // no need for test
+    inline const std::size_t getSize() { return _list.size(); }                                // no need for test
 
     // add task to list
     bool addTask(std::string taskTitle, std::string taskDetails, int priority);        // pass test
@@ -31,8 +31,8 @@ public:
     bool deleteTask(std::size_t index); // pass test
 
     // change order of the list
-    bool moveTaskUp(std::size_t index);
-    bool moveTaskDown(std::size_t index);
+    bool moveTaskUp(std::size_t index);   // pass test
+    bool moveTaskDown(std::size_t index); // pass test
     bool moveToTop(std::size_t index);
     bool moveToBottom(std::size_t);
 
@@ -41,7 +41,7 @@ public:
     bool readFromFile(std::ifstream& out);
 private:
     std::vector<std::unique_ptr<Task>> _list;
-    static bool validateIndex(std::size_t index, std::size_t size);
+    static bool validateIndex(std::size_t index, std::size_t size); // pass test
 
     friend class testClass;
 };
