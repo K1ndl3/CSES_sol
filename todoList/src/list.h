@@ -5,6 +5,7 @@
 #include <cctype>
 #include <cstddef>
 #include <fstream>
+#include <algorithm>
 #include "task.h"
 class List{
 
