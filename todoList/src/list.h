@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cctype>
 #include <cstddef>
+#include <fstream>
 #include "task.h"
 class List{
 
@@ -27,11 +28,20 @@ public:
     bool editTask(std::string title, std::string details, int priority, std::size_t index); // pass test
     
     // delete a task
-    bool deleteTask(std::size_t index);
+    bool deleteTask(std::size_t index); // pass test
 
     // change order of the list
-        // move task up
-        //, down, toTop, toBottom, rearrage entire list
+    bool moveTaskUp(std::size_t index);
+    bool moveTaskDown(std::size_t index);
+    bool moveToTop(std::size_t index);
+    bool moveToBottom(std::size_t);
+
+    // write/read to file
+    bool writeToFile(std::ofstream& out);
+    bool readFromFile(std::ifstream& out);
 private:
     std::vector<std::unique_ptr<Task>> _list;
+    static bool validateIndex(std::size_t index, std::size_t size);
+
+    friend class testClass;
 };

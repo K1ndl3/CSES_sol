@@ -20,7 +20,8 @@ TEST_CASE("List::trimRightWS") {
     std::string t2 = "hello";
     std::string t3 = "     ";
     std::string t4 = "";
-    INFO(size(List::trimRightWS(t1)));
+    std::string t0 = "h ";
+    REQUIRE(List::trimRightWS(t0) == "h");
     REQUIRE(List::trimRightWS(t1) == "hello");
     REQUIRE(List::trimRightWS(t2) == "hello");
     REQUIRE(List::trimRightWS(t3) == "");
@@ -91,4 +92,28 @@ TEST_CASE("List::deleteTask") {
     list.deleteTask(0);
     REQUIRE(list.List::getSize() == 0);
     REQUIRE(list.deleteTask(1) == false);
+}
+
+class testClass{
+public:
+    static bool validateIndex(std::size_t index, std::size_t size) { 
+        return List::validateIndex(index, size);
+    }    
+};
+TEST_CASE("List::validateIndex") {
+    List list;
+    Task task("test", "test", 1);
+    Task task1("test", "test", 1);
+    Task task2("test", "test", 1);
+    Task task3("test", "test", 1);
+    list.addTask(task);
+    list.addTask(task1);
+    list.addTask(task2);
+    list.addTask(task3);
+    std::size_t size = list.getSize();
+    REQUIRE(testClass::validateIndex(6, size) == false);
+    REQUIRE(testClass::validateIndex(1, size) == true);
+    REQUIRE(testClass::validateIndex(-1, size) == false);
+    REQUIRE(testClass::validateIndex(3, size) == true);
+
 }

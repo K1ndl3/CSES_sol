@@ -1,4 +1,3 @@
-
 #include "list.h"
 
 bool List::addTask(std::string taskTitle, std::string taskDetails, int priority)
@@ -30,13 +29,28 @@ bool List::editTask(std::string title, std::string details, int priority, std::s
 bool List::deleteTask(std::size_t index)
 {
     if (_list.empty()) {
-        std::cout << "ERROR: Empty list (DELETE_TASK)";
+        std::cout << "ERROR: Empty list (DELETE_TASK)\n";
     }
     if (index >= _list.size()) {
-        std::cout << "ERROR: Invalid index (DELETE_TASK)";
+        std::cout << "ERROR: Invalid index (DELETE_TASK)\n";
         return false;
     }
     _list.erase(_list.begin() + index);
+    return true;
+}
+
+bool List::moveTaskUp(std::size_t index)
+{
+
+    if (index == 0 || !validateIndex(index, _list.size())) return false; // cannot move task up bc its at the top
+    std::swap(_list.at(index), _list.at(index - 1));
+}
+
+bool List::validateIndex(std::size_t index, std::size_t size)
+{
+    if(index >= size || index < 0) {
+        return false;
+    }
     return true;
 }
 
@@ -51,10 +65,15 @@ std::string& List::trimLeftWS(std::string &strToTrim)
 
 std::string& List::trimRightWS(std::string &strToTrim)
 {
-    int size = strToTrim.size() - 1;
-    if (!isspace(strToTrim[size])) return strToTrim;
-    std::string::iterator sIt = strToTrim.end() - 1;
-    while (sIt != strToTrim.begin() && isspace(*(sIt - 1))) sIt--;
+    if (strToTrim.empty()) return strToTrim;
+    std::string::iterator sIt = strToTrim.end(); // iterator starts one past the last char in the string
+    while (sIt != strToTrim.begin()) {
+        --sIt; // Decrement the iterator first
+        if (!isspace(*sIt)) {
+            ++sIt; // Move back to the first non-space character
+            break;
+        }
+    }
     strToTrim.erase(sIt, strToTrim.end());
     return strToTrim;
 }
@@ -69,15 +88,15 @@ std::string& List::trimEntireString(std::string &s)
 bool List::validateInput(std::string &title, std::string &details, int priority)
 {
     if (title.empty()) {
-        std::cout << "ERROR: title cannot be empty (VALIDATE_INPUT)";
+        std::cout << "ERROR: title cannot be empty (VALIDATE_INPUT)\n";
         return false;
     }
     if (details.empty()) {
-        std::cout << "ERROR: details cannot be empty (VALIDATE_INPUT)";
+        std::cout << "ERROR: details cannot be empty (VALIDATE_INPUT)\n";
         return false;
     }
     if (priority < 1 || priority > 5) {
-        std::cout << "ERROR: invalid priority rating (VALIDATE_INPUT)";
+        std::cout << "ERROR: invalid priority rating (VALIDATE_INPUT)\n";
         return false;
     }
     return true;
