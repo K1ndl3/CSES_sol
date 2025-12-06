@@ -30,6 +30,7 @@ bool List::deleteTask(std::size_t index)
 {
     if (_list.empty()) {
         std::cout << "ERROR: Empty list (DELETE_TASK)\n";
+        return false;
     }
     if (index >= _list.size()) {
         std::cout << "ERROR: Invalid index (DELETE_TASK)\n";
@@ -88,10 +89,6 @@ bool List::moveToBottom(std::size_t index)
 
 bool List::writeToFile(std::ofstream &out)
 {
-    if (out.is_open()) {
-        std::cout << "ERROR: cannot open file (WRITE_TO_FILE)\n";
-        return false;
-    }
     std::size_t size = _list.size();
     char delimiter = '|';
     if (size == 0) {
@@ -107,14 +104,40 @@ bool List::writeToFile(std::ofstream &out)
     return true;
 }
 
-bool List::readFromFile(std::ifstream &out)
+bool List::readFromFile(std::ifstream &in)
 {
-    if (out.is_open()) {
-        std::cout << "ERROR: cannot open file (READ_TO_FILE)\n";
+    if (!in.is_open()) {  // Check if the file is open
+        std::cout << "ERROR: cannot open file (READ_FROM_FILE)\n";
         return false;
     }
-    // need to create task objects from out
-    //
+
+    std::string line;
+    char delimiter = '|';
+
+    while (std::getline(in, line)) {  // Read each line from the file
+        std::size_t firstDelim = line.find(delimiter);
+        std::size_t secondDelim = line.find(delimiter, firstDelim + 1);
+
+        if (firstDelim == std::string::npos || secondDelim == std::string::npos) {
+            std::cout << "ERROR: invalid file format (READ_FROM_FILE)\n";
+            return false;  // Invalid format
+        }
+
+        // Extract taskTitle, taskDetails, and priority
+        std::string taskTitle = line.substr(0, firstDelim);
+        std::string taskDetails = line.substr(firstDelim + 1, secondDelim - firstDelim - 1);
+        int priority = std::stoi(line.substr(secondDelim + 1));
+
+        // Validate and add the task
+        if (!validateInput(taskTitle, taskDetails, priority)) {
+            std::cout << "ERROR: invalid task data (READ_FROM_FILE)\n";
+            return false;
+        }
+
+        addTask(taskTitle, taskDetails, priority);
+    }
+
+    return true;
 }
 
 bool List::validateIndex(std::size_t index, std::size_t size)

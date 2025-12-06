@@ -100,13 +100,66 @@ TEST_CASE("List::editTask") {
     REQUIRE(list.List::getTask(0)->getPriority() == newInt);
 }
 
-TEST_CASE("List::deleteTask") {
-    List list;
-    Task task("test", "test", 1);
-    list.addTask(task);
-    list.deleteTask(0);
-    REQUIRE(list.List::getSize() == 0);
-    REQUIRE(list.deleteTask(1) == false);
+TEST_CASE("List::deleteTask - robust test cases") {
+    testClass test;
+
+    SECTION("Delete task at the beginning of the list") {
+        REQUIRE(test.deleteTask(0) == true);  // Delete the first task
+        REQUIRE(test.getSize() == 3);  // Ensure the size is reduced
+        REQUIRE(test.getTask(0)->getTitle() == "Task 2");  // Ensure the list is updated
+    }
+
+    SECTION("Delete task in the middle of the list") {
+        REQUIRE(test.deleteTask(1) == true);  // Delete the second task
+        REQUIRE(test.getSize() == 3);  // Ensure the size is reduced
+        REQUIRE(test.getTask(1)->getTitle() == "Task 3");  // Ensure the list is updated
+    }
+
+    SECTION("Delete task at the end of the list") {
+        REQUIRE(test.deleteTask(3) == true);  // Delete the last task
+        REQUIRE(test.getSize() == 3);  // Ensure the size is reduced
+        REQUIRE(test.getTask(2)->getTitle() == "Task 3");  // Ensure the list is updated
+    }
+
+    SECTION("Delete all tasks one by one") {
+        REQUIRE(test.deleteTask(0) == true);  // Delete the first task
+        REQUIRE(test.deleteTask(0) == true);  // Delete the next task (index shifts)
+        REQUIRE(test.deleteTask(0) == true);  // Delete the next task
+        REQUIRE(test.deleteTask(0) == true);  // Delete the last task
+        REQUIRE(test.getSize() == 0);  // Ensure the list is empty
+    }
+
+    SECTION("Delete task from an empty list") {
+        while (test.getSize() > 0) {
+            test.deleteTask(0);
+        }
+        REQUIRE(test.getSize() == 0);  // Ensure the list is empty
+        REQUIRE(test.deleteTask(0) == false);  // Attempt to delete from an empty list
+    }
+
+    SECTION("Delete task with an invalid index (out of bounds)") {
+        REQUIRE(test.deleteTask(10) == false);  // Index greater than the size of the list
+        REQUIRE(test.deleteTask(-1) == false);  // Negative index
+        REQUIRE(test.getSize() == 4);  // Ensure the list remains unchanged
+    }
+
+    SECTION("Delete task and verify subsequent tasks shift correctly") {
+        REQUIRE(test.deleteTask(1) == true);  // Delete the second task
+        REQUIRE(test.getSize() == 3);  // Ensure the size is reduced
+        REQUIRE(test.getTask(0)->getTitle() == "Task 1");  // Ensure the first task remains unchanged
+        REQUIRE(test.getTask(1)->getTitle() == "Task 3");  // Ensure the third task shifts to the second position
+        REQUIRE(test.getTask(2)->getTitle() == "Task 4");  // Ensure the fourth task shifts to the third position
+    }
+
+    SECTION("Delete task multiple times with invalid and valid indices") {
+        REQUIRE(test.deleteTask(1) == true);  // Delete the second task
+        REQUIRE(test.deleteTask(10) == false);  // Invalid index
+        REQUIRE(test.deleteTask(0) == true);  // Delete the first task
+        REQUIRE(test.deleteTask(5) == false);  // Invalid index
+        REQUIRE(test.deleteTask(0) == true);  // Delete the next task
+        REQUIRE(test.deleteTask(0) == true);  // Delete the last task
+        REQUIRE(test.getSize() == 0);  // Ensure the list is empty
+    }
 }
 
 TEST_CASE("List::validateIndex") {
@@ -330,6 +383,20 @@ TEST_CASE("List::writeToFile()") {
     REQUIRE(out.is_open() == true);
     testClass test;
     test.writeToFile(out);
-    
+}
+
+TEST_CASE("List::readFromFile") {
+    testClass test;
+    std::ifstream in("./database/list.txt");
+    std::ofstream out("./database/list.txt");
+    while (test.getSize() > 0) {
+        test.deleteTask(0);
+    }
+    REQUIRE(test.getSize() == 0);
+    REQUIRE(out.is_open() == true);
+    test.addTask("in", "in", 5);
+    test.writeToFile(out);
+    REQUIRE(test.getTask(0)->getTitle() == "in");
+
 }
 
