@@ -1,4 +1,5 @@
 #define CATCH_CONFIG_MAIN
+#include <iostream>
 #include "./test_lib/catch_amalgamated.hpp"
 #include "task.h"
 #include "list.h"
@@ -257,7 +258,7 @@ TEST_CASE("List::moveToTop - edge cases and invalid inputs") {
         REQUIRE(test.moveToTop(3) == true);  // Move "Task 4" to the top
         REQUIRE(test.getTask(0)->getTitle() == "Task 4");  // "Task 4" should now be at index 0
 
-        REQUIRE(test.moveToTop(2) == true);  // Move "Task 3" to the top
+        REQUIRE(test.moveToTop(3) == true);  // Move "Task 3" to the top
         REQUIRE(test.getTask(0)->getTitle() == "Task 3");  // "Task 3" should now be at index 0
         REQUIRE(test.getTask(1)->getTitle() == "Task 4");  // "Task 4" should now be at index 1
     }

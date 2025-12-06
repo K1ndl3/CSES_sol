@@ -64,10 +64,8 @@ bool List::moveTaskDown(std::size_t index)
 
 bool List::moveToTop(std::size_t index)
 {
-    if (index == 0 || index >= getSize() || !validateIndex(index, _list.size())) {
-        std::cout << "ERROR: cannot move task to top (MOVE_TASK_TOP)'n";
-        return false;
-    }
+    if (index == 0) return false; // already at the top
+    if (!validateIndex(index, _list.size())) return false;
     std::rotate(_list.begin(), _list.begin() + index, _list.begin() + index + 1);
     return true;
 }
