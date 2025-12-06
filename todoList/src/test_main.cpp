@@ -1,5 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include <iostream>
+#include <fstream>
 #include "./test_lib/catch_amalgamated.hpp"
 #include "task.h"
 #include "list.h"
@@ -273,3 +274,62 @@ TEST_CASE("List::moveToTop - edge cases and invalid inputs") {
         REQUIRE(singleTaskList.getTask(0)->getTitle() == "Task 1");  // Ensure the task remains unchanged
     }
 }
+
+TEST_CASE("List::moveToBottom - edge cases and invalid inputs") {
+    testClass test;
+
+    SECTION("Move task already at the bottom (last index)") {
+        REQUIRE(test.moveToBottom(3) == false);  // Task 4 is already at the bottom
+        REQUIRE(test.getTask(3)->getTitle() == "Task 4");  // Ensure the list remains unchanged
+    }
+
+    SECTION("Move task from the middle of the list to the bottom") {
+        REQUIRE(test.moveToBottom(1) == true);  // Move "Task 2" to the bottom
+        REQUIRE(test.getTask(3)->getTitle() == "Task 2");  // "Task 2" should now be at the bottom
+        REQUIRE(test.getTask(0)->getTitle() == "Task 1");
+        REQUIRE(test.getTask(1)->getTitle() == "Task 3");
+        REQUIRE(test.getTask(2)->getTitle() == "Task 4");
+    }
+
+    SECTION("Move task from the top of the list to the bottom") {
+        REQUIRE(test.moveToBottom(0) == true);  // Move "Task 1" to the bottom
+        REQUIRE(test.getTask(3)->getTitle() == "Task 1");  // "Task 1" should now be at the bottom
+        REQUIRE(test.getTask(0)->getTitle() == "Task 2");
+        REQUIRE(test.getTask(1)->getTitle() == "Task 3");
+        REQUIRE(test.getTask(2)->getTitle() == "Task 4");
+    }
+
+    SECTION("Invalid index (out of bounds)") {
+        REQUIRE(test.moveToBottom(7) == false);  // Index out of bounds
+        REQUIRE(test.moveToBottom(-1) == false);  // Negative index (invalid)
+    }
+
+    SECTION("Move multiple tasks to the bottom sequentially") {
+        REQUIRE(test.moveToBottom(0) == true);  // Move "Task 1" to the bottom
+        REQUIRE(test.getTask(3)->getTitle() == "Task 1");  // "Task 1" should now be at the bottom
+
+        REQUIRE(test.moveToBottom(0) == true);  // Move "Task 2" to the bottom
+        REQUIRE(test.getTask(3)->getTitle() == "Task 2");  // "Task 2" should now be at the bottom
+        REQUIRE(test.getTask(0)->getTitle() == "Task 3");
+        REQUIRE(test.getTask(1)->getTitle() == "Task 4");
+    }
+
+    SECTION("Move task to the bottom in a single-item list") {
+        testClass singleTaskList;
+        singleTaskList.deleteTask(1);  // Remove all tasks except the first one
+        singleTaskList.deleteTask(1);
+        singleTaskList.deleteTask(1);
+        REQUIRE(singleTaskList.getSize() == 1);  // Ensure only one task remains
+        REQUIRE(singleTaskList.moveToBottom(0) == false);  // Cannot move the only task to the bottom
+        REQUIRE(singleTaskList.getTask(0)->getTitle() == "Task 1");  // Ensure the task remains unchanged
+    }
+}
+
+TEST_CASE("List::writeToFile()") {
+    std::ofstream out("./database/list.txt");
+    REQUIRE(out.is_open() == true);
+    testClass test;
+    test.writeToFile(out);
+    
+}
+

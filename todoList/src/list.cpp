@@ -64,10 +64,57 @@ bool List::moveTaskDown(std::size_t index)
 
 bool List::moveToTop(std::size_t index)
 {
-    if (index == 0) return false; // already at the top
+    if (index == 0) {
+        std::cout << "ERROR: task already at the top (MOVE_TO_TOP) \n";
+        return false; // already at the top
+    }    
     if (!validateIndex(index, _list.size())) return false;
     std::rotate(_list.begin(), _list.begin() + index, _list.begin() + index + 1);
     return true;
+}
+
+bool List::moveToBottom(std::size_t index)
+{
+    if (index == _list.size() - 1) {
+        std::cout << "ERROR: task already at the bottom (MOVE_TO_BOTTOM) \n";
+        return false;
+    }
+    if (!validateIndex(index, _list.size())) {
+        return false;
+    }
+    std::rotate(_list.begin() + index, _list.begin() + index + 1, _list.end());
+    return true;
+}
+
+bool List::writeToFile(std::ofstream &out)
+{
+    if (out.is_open()) {
+        std::cout << "ERROR: cannot open file (WRITE_TO_FILE)\n";
+        return false;
+    }
+    std::size_t size = _list.size();
+    char delimiter = '|';
+    if (size == 0) {
+        std::cout << "ERROR: empty list cannot be saved (WRITE_TO_FILE)\n";
+        return false;
+    }
+    for (std::size_t i = 0; i < size; i++) {
+        auto currTask = getTask(i);
+        out << currTask->getTitle() << delimiter
+            << currTask->getDetails() << delimiter
+            << currTask->getPriority() << '\n';
+    }
+    return true;
+}
+
+bool List::readFromFile(std::ifstream &out)
+{
+    if (out.is_open()) {
+        std::cout << "ERROR: cannot open file (READ_TO_FILE)\n";
+        return false;
+    }
+    // need to create task objects from out
+    //
 }
 
 bool List::validateIndex(std::size_t index, std::size_t size)

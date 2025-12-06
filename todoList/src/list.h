@@ -34,8 +34,8 @@ public:
     // change order of the list
     bool moveTaskUp(std::size_t index);   // pass test
     bool moveTaskDown(std::size_t index); // pass test
-    bool moveToTop(std::size_t index);
-    bool moveToBottom(std::size_t);
+    bool moveToTop(std::size_t index);    // pass test
+    bool moveToBottom(std::size_t index); // pass test
 
     // write/read to file
     bool writeToFile(std::ofstream& out);
