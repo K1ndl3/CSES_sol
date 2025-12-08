@@ -2,8 +2,9 @@
 #include <iostream>
 #include <fstream>
 #include "./test_lib/catch_amalgamated.hpp"
-#include "task.h"
-#include "list.h"
+#include "./task/task.h"
+#include "./list/list.h"
+#include "./listviewer/listViewer.h"
 
 class testClass : public List{
 public:
@@ -400,3 +401,18 @@ TEST_CASE("List::readFromFile") {
 
 }
 
+TEST_CASE("ListViewer::printList") {
+    testClass test;
+    ListViewer viewer;
+    viewer.printList(test);
+}
+
+TEST_CASE("ListViewer::printListMove") {
+    testClass test;
+    ListViewer viewer;
+    viewer.printListMove(test);
+    SECTION("Intergration test between list and listviewer for movement of task") {
+        test.moveTaskUp(3);
+        viewer.printListMove(test);
+    }
+}
