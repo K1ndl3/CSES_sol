@@ -14,4 +14,6 @@ public:
     ListViewer() = default;
     void printList(List& list);
     void printListMove(List& list);
+    void printOptions();
+    
 };

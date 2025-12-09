@@ -37,3 +37,10 @@ void ListViewer::printListMove(List &list)
         std::cout << "+====================+\n\n\n";
     } 
 }
+
+void ListViewer::printOptions()
+{
+    std::cout << "1. Add task\n";
+    std::cout << "2. Edit task\n";
+    std::cout << "3. Reorder Task\n";
+}
