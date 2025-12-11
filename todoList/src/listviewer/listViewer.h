@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <iomanip>
 #include <cstddef>
@@ -15,5 +16,5 @@ public:
     void printList(List& list);
     void printListMove(List& list);
     void printOptions();
-    
+    void reOrderTaskOptions();
 };

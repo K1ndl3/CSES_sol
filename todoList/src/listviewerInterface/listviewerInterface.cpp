@@ -1,6 +1,20 @@
-#include "listViewer.h"
+#include "listviewerInterface.h"
 
-void ListViewer::printList(List &list)
+void basicViewer::printOptions()
+{
+    std::cout << "1. Add task\n";
+    std::cout << "2. Edit task\n";
+    std::cout << "3. Reorder Task\n";
+}
+
+void basicViewer::refresh()
+{
+    for (int i = 0; i < 50; i++) {
+        std::cout << '\n';
+    }
+}
+
+void basicViewer::print(List& list)
 {
     std::size_t size = list.getSize();
         if (size == 0) {
@@ -27,7 +41,7 @@ void ListViewer::printList(List &list)
         }
 }
 
-void ListViewer::printListMove(List &list)
+void basicViewer::printShort(List &list)
 {
     std::size_t size = list.getSize();
     for (int i = 0; i < size; ++i) {
@@ -35,17 +49,10 @@ void ListViewer::printListMove(List &list)
         std::cout << "+====================+\n";
         std::cout << "| " << std::setw(2) << i + 1 << ". " << std::left << std::setw(15) << title.substr(0, 15) << " |\n";
         std::cout << "+====================+\n\n\n";
-    } 
+    }
 }
 
-void ListViewer::printOptions()
-{
-    std::cout << "1. Add task\n";
-    std::cout << "2. Edit task\n";
-    std::cout << "3. Reorder Task\n";
-}
-
-void ListViewer::reOrderTaskOptions()
+void basicViewer::reorderOptions()
 {
     std::cout << "1. move task up\n";
     std::cout << "2. move task down\n";

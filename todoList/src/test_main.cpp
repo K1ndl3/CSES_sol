@@ -5,6 +5,7 @@
 #include "./task/task.h"
 #include "./list/list.h"
 #include "./listviewer/listViewer.h"
+#include "./listviewerInterface/listviewerInterface.h"
 
 class testClass : public List{
 public:
