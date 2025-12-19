@@ -5,6 +5,8 @@ void basicViewer::printOptions()
     std::cout << "1. Add task\n";
     std::cout << "2. Edit task\n";
     std::cout << "3. Reorder Task\n";
+    std::cout << "4. Save/Load Task\n";
+    std::cout << "9. End Program\n";
 }
 
 void basicViewer::refresh()

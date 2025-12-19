@@ -419,9 +419,9 @@ TEST_CASE("ListViewer::printListMove") {
     }
 }
 
-TEST_CASE("User::run") {
+TEST_CASE("basicViewer::print") {
     testClass test;
     basicViewer viewer;
     User user;
-    user.run(test, viewer);
+    user.run(test,viewer);
 }
