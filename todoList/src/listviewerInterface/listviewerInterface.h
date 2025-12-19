@@ -14,6 +14,7 @@ public:
 };
 
 class basicViewer : public ListViewerInterface {
+public:
     basicViewer() = default;
     void printOptions() override;
     void refresh() override;

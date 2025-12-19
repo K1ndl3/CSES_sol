@@ -12,6 +12,7 @@ public:
     User() : _userList(std::make_unique<List>()) {};
     void run(List& list, ListViewerInterface& viewerInterface);
     void flipRunning();
+    bool addTask(List& list);
     inline int getRunning() const { return _running; };
 
 private:

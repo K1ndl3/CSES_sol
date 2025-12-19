@@ -13,7 +13,13 @@ void User::run(List& list, ListViewerInterface& viewerInterface)
     switch (userInput)
     {
     case 1:
-        /* code */
+        User::addTask(list);
+        break;
+    case 2:
+
+        break;
+    
+    case 3:
         break;
     
     default:
@@ -25,4 +31,19 @@ void User::run(List& list, ListViewerInterface& viewerInterface)
 void User::flipRunning()
 {
     _running = (!_running) ? true : false;
+}
+
+bool User::addTask(List& list)
+{
+    std::string taskTitle;
+    std::string taskDetail;
+    int priority;
+    std::cout << "Enter Task Title: \n";
+    std::cin >> taskTitle;
+    std::cout << "Enter Task Details: \n";
+    std::cin >> taskDetail;
+    std::cout << "Enter Task Priority (1-5): \n";
+    std::cin >> priority;
+    Task task(taskTitle, taskDetail, priority);
+    list.addTask(task);
 }

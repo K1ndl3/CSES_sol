@@ -6,6 +6,7 @@
 #include "./list/list.h"
 #include "./listviewer/listViewer.h"
 #include "./listviewerInterface/listviewerInterface.h"
+#include "./user/user.h"
 
 class testClass : public List{
 public:
@@ -416,4 +417,11 @@ TEST_CASE("ListViewer::printListMove") {
         test.moveTaskUp(3);
         viewer.printListMove(test);
     }
+}
+
+TEST_CASE("User::run") {
+    testClass test;
+    basicViewer viewer;
+    User user;
+    user.run(test, viewer);
 }
